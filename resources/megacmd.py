@@ -1,5 +1,5 @@
 import subprocess
-import urllib
+from typing import List
 
 
 MEGA_CMD_PATH = "mega"
@@ -10,6 +10,9 @@ subprocess.call(MEGA_CMD_PATH + "-" + "ls")
 
 def get_output(cmd):
     cmd = [MEGA_CMD_PATH + "-" + cmd[0]] + cmd[1:]
+    for idx, c in enumerate(cmd):
+        if isinstance(c, str):
+            cmd[idx] = c.encode("utf-8")
     output = subprocess.check_output(cmd)
     output_splits = output.decode("utf-8").split("\n")
     output_splits.remove("")
@@ -30,10 +33,12 @@ def list_files(megapath="."):
     for filename, attrs in zip(files_list, attrs_list):
         is_dir = attrs.startswith("d")
         path = "{}/{}".format(megapath, filename).replace("//", "/")
-        file_info = {"name": filename,
-                     "is_dir": is_dir,
-                     "path": path,
-                     "url": webdav_url(path)}
+        file_info = {
+            "name": filename,
+            "is_dir": is_dir,
+            "path": path,
+            "url": webdav_url(path),
+        }
 
         # if is_dir:
         #     file_info["contents"] = list_files(filename),
