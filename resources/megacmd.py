@@ -1,5 +1,4 @@
 import subprocess
-from typing import List
 
 
 MEGA_CMD_PATH = "mega"
